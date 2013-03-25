@@ -2,13 +2,14 @@
 #define LD110_ANALYZER_H
 
 #include <Analyzer.h>
-#include "LD110AnalyzerResults.h"
-#include "LD110SimulationDataGenerator.h"
-
+#include <AnalyzerChannelData.h>
 #include <vector>
 #include <memory>
 
-class LD110AnalyzerSettings;
+#include "LD110AnalyzerResults.h"
+#include "LD110SimulationDataGenerator.h"
+#include "LD110AnalyzerSettings.h"
+
 
 class ANALYZER_EXPORT LD110Analyzer : public Analyzer
   {
@@ -17,14 +18,14 @@ class ANALYZER_EXPORT LD110Analyzer : public Analyzer
     virtual ~LD110Analyzer();
     virtual void WorkerThread();
 
-    virtual U32 GenerateSimulationData( U64 newest_sample_requested, U32 sample_rate, SimulationChannelDescriptor** simulation_channels );
+    virtual U32 GenerateSimulationData(U64 nNewestSampleRequested, U32 nSampleRate, SimulationChannelDescriptor** apoSimulationChannels);
     virtual U32 GetMinimumSampleRateHz();
 
     virtual const char* GetAnalyzerName() const;
     virtual bool NeedsRerun();
 
   protected:
-    std::unique_ptr<LD110AnalyzerSettings> m_oSettings;
+    std::unique_ptr<LD110AnalyzerSettings> m_oSettings{new LD110AnalyzerSettings()};
     std::unique_ptr<LD110AnalyzerResults>  m_oResults;
     
     std::vector<AnalyzerChannelData*> m_oBCDChannelDataVector;
@@ -33,8 +34,11 @@ class ANALYZER_EXPORT LD110Analyzer : public Analyzer
     AnalyzerChannelData* m_poGlobalClockChannelData;
     LD110SimulationDataGenerator m_oSimulationDataGenerator;
     
-    bool m_bSimulationIsInitialized;
-    
+    bool m_bSimulationIsInitialized = false;
+    bool m_bIsFirstFrame = true;
+
+    U64 m_nEndOfLastFrame = 0;
+
   protected:
     void AdvanceAllChannelsToSample(U64 nSampleIndex);
 		void AdvanceAllChannelsEightClockCycles();

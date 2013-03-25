@@ -1,10 +1,8 @@
 #include "LD110Analyzer.h"
-#include "LD110AnalyzerSettings.h"
-#include <AnalyzerChannelData.h>
 
-LD110Analyzer::LD110Analyzer() :	Analyzer(), m_oSettings(new LD110AnalyzerSettings()), m_bSimulationIsInitialized(false)
+LD110Analyzer::LD110Analyzer() :	Analyzer()
   {
-  SetAnalyzerSettings( m_oSettings.get() );
+  SetAnalyzerSettings(m_oSettings.get());
   }
 
 LD110Analyzer::~LD110Analyzer()
@@ -29,8 +27,6 @@ void LD110Analyzer::WorkerThread()
     m_oDigitChannelDataVector.push_back(GetAnalyzerChannelData(*m_oSettings->DigitChannelGet(nIndex)));
     }
   
-  AnalyzerChannelData debugData = *m_oDigitChannelDataVector[0];
-  
   if(m_oDigitChannelDataVector[0]->GetBitState() == BIT_LOW)
     {
     AdvanceAllChannelsToSample(m_oDigitChannelDataVector[0]->GetSampleOfNextEdge());
@@ -46,7 +42,13 @@ void LD110Analyzer::WorkerThread()
     U8 anDigits[4] = {0,0,0,0};
 
 		Frame oFrame;
-		oFrame.mStartingSampleInclusive = m_poGlobalClockChannelData->GetSampleNumber();
+    
+    if(m_bIsFirstFrame)
+      oFrame.mStartingSampleInclusive = m_poGlobalClockChannelData->GetSampleNumber();
+    else
+      oFrame.mStartingSampleInclusive = m_nEndOfLastFrame;
+
+    m_bIsFirstFrame = false;
 
     for(int nBCDChannel = 0; nBCDChannel < 4; nBCDChannel++)
       {
@@ -76,7 +78,8 @@ void LD110Analyzer::WorkerThread()
 		
 		oFrame.mData1 = 0 + 1000 * anDigits[0] + 100 * anDigits[1] + 10 * anDigits[2] + anDigits[3];
 		oFrame.mFlags = 0;
-		oFrame.mEndingSampleInclusive   = m_poGlobalClockChannelData->GetSampleNumber();
+		oFrame.mEndingSampleInclusive   = m_oDigitChannelDataVector[0]->GetSampleOfNextEdge();
+    m_nEndOfLastFrame = m_oDigitChannelDataVector[0]->GetSampleOfNextEdge();
 		
 		m_oResults->AddFrame(oFrame);
 		m_oResults->CommitResults();
@@ -102,7 +105,6 @@ void LD110Analyzer::AdvanceAllChannelsEightClockCycles()
 	{
   for(int i = 0; i < 16; i++)
     {
-    m_oResults->AddMarker((m_poGlobalClockChannelData->GetSampleNumber() + m_poGlobalClockChannelData->GetSampleOfNextEdge()) / 2, AnalyzerResults::MarkerType::Dot, *m_oSettings->GlobalClockChannelGet());
     m_poGlobalClockChannelData->AdvanceToNextEdge();
     }
 	
@@ -116,15 +118,15 @@ bool LD110Analyzer::NeedsRerun()
 	return false;
   }
 
-U32 LD110Analyzer::GenerateSimulationData( U64 minimum_sample_index, U32 device_sample_rate, SimulationChannelDescriptor** simulation_channels )
+U32 LD110Analyzer::GenerateSimulationData(U64 nNewestSampleRequested, U32 nSampleRate, SimulationChannelDescriptor** apoSimulationChannels)
   {
-  if( m_bSimulationIsInitialized == false )
+  if(m_bSimulationIsInitialized == false)
     {
-		m_oSimulationDataGenerator.Initialize( GetSimulationSampleRate(), m_oSettings.get() );
+		m_oSimulationDataGenerator.Initialize(GetSimulationSampleRate(), m_oSettings.get());
 		m_bSimulationIsInitialized = true;
     }
 
-	return m_oSimulationDataGenerator.GenerateSimulationData( minimum_sample_index, device_sample_rate, simulation_channels );
+	return m_oSimulationDataGenerator.GenerateSimulationData(nNewestSampleRequested, nSampleRate, apoSimulationChannels);
   }
 
 U32 LD110Analyzer::GetMinimumSampleRateHz()
@@ -134,12 +136,12 @@ U32 LD110Analyzer::GetMinimumSampleRateHz()
 
 const char* LD110Analyzer::GetAnalyzerName() const
   {
-	return "LD110 BCD Analyzer";
+	return "LD110 ADC Analyzer";
   }
 
 const char* GetAnalyzerName()
   {
-	return "LD110 BCD Analyzer";
+	return "LD110 ADC Analyzer";
   }
 
 Analyzer* CreateAnalyzer()
