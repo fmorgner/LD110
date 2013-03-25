@@ -76,7 +76,7 @@ void LD110Analyzer::WorkerThread()
       anDigits[3] |= m_oBCDChannelDataVector[nBCDChannel]->GetBitState() << nBCDChannel;
       }
 		
-		oFrame.mData1 = 0 + 1000 * anDigits[0] + 100 * anDigits[1] + 10 * anDigits[2] + anDigits[3];
+		oFrame.mData1 = 0 + 1000 * anDigits[3] + 100 * anDigits[2] + 10 * anDigits[1] + anDigits[0];
 		oFrame.mFlags = 0;
 		oFrame.mEndingSampleInclusive   = m_oDigitChannelDataVector[0]->GetSampleOfNextEdge();
     m_nEndOfLastFrame = m_oDigitChannelDataVector[0]->GetSampleOfNextEdge();
