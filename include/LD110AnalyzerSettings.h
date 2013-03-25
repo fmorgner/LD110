@@ -24,7 +24,10 @@ class LD110AnalyzerSettings : public AnalyzerSettings
     Channel* GlobalClockChannelGet() { return &m_oGlobalClockChannel; }
     
     short BCDAndChannelCountGet() { return m_nBCDAndDigitChannelCount; }
-    
+
+  protected:
+    void AddChannels();
+
   protected:
   	SimpleArchive m_oArchive;
     short m_nBCDAndDigitChannelCount = 4;

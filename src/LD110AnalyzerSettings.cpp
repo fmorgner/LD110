@@ -25,7 +25,10 @@ LD110AnalyzerSettings::LD110AnalyzerSettings() : m_oGlobalClockChannel(UNDEFINED
     m_oBCDChannelInterfaceVector[nIndex]->SetChannel(m_oBCDChannelVector[nIndex]);
 
     AddInterface(m_oBCDChannelInterfaceVector[nIndex].get());
+    }
 
+  for(int nIndex = 0; nIndex < m_nBCDAndDigitChannelCount; nIndex++)
+    {
     m_oTitle.str("Digit ");
     m_oTitle << nIndex + 1 << " clock";
     
@@ -49,19 +52,7 @@ LD110AnalyzerSettings::LD110AnalyzerSettings() : m_oGlobalClockChannel(UNDEFINED
 	AddExportExtension( 0, "csv", "csv" );
 
 	ClearChannels();
-
-  for(int nIndex = 0; nIndex < m_nBCDAndDigitChannelCount; nIndex++)
-    {
-    m_oTitle.str("BCD bit ");
-    m_oTitle << nIndex + 1;
-    AddChannel(m_oBCDChannelVector[nIndex], m_oTitle.str().c_str(), false);
-
-    m_oTitle.str("Digit ");
-    m_oTitle << nIndex + 1 << " clock";
-    AddChannel(m_oDigitChannelVector[nIndex], m_oTitle.str().c_str(), false);
-    }
-
-	AddChannel(m_oGlobalClockChannel, "Global IC clock", false);
+  AddChannels();
   }
 
 LD110AnalyzerSettings::~LD110AnalyzerSettings()
@@ -79,19 +70,7 @@ bool LD110AnalyzerSettings::SetSettingsFromInterfaces()
   m_oGlobalClockChannel = m_oGlobalClockChannelInterface->GetChannel();
   
 	ClearChannels();
-
-  for(int nIndex = 0; nIndex < m_nBCDAndDigitChannelCount; nIndex++)
-    {
-    m_oTitle.str("BCD bit ");
-    m_oTitle << nIndex + 1;
-    AddChannel(m_oBCDChannelVector[nIndex], m_oTitle.str().c_str(), true);
-
-    m_oTitle.str("Digit ");
-    m_oTitle << nIndex + 1 << " clock";
-    AddChannel(m_oDigitChannelVector[nIndex], m_oTitle.str().c_str(), true);
-    }
-
-	AddChannel(m_oGlobalClockChannel, "Global IC clock", true);
+  AddChannels();
 
 	return true;
   }
@@ -120,21 +99,9 @@ void LD110AnalyzerSettings::LoadSettings( const char* settings )
   m_oArchive >> m_oGlobalClockChannel;
 
 	ClearChannels();
-
-  for(int nIndex = 0; nIndex < m_nBCDAndDigitChannelCount; nIndex++)
-    {
-    m_oTitle.str("BCD bit ");
-    m_oTitle << nIndex + 1;
-    AddChannel(m_oBCDChannelVector[nIndex], m_oTitle.str().c_str(), true);
-
-    m_oTitle.str("Digit ");
-    m_oTitle << nIndex + 1 << " clock";
-    AddChannel(m_oDigitChannelVector[nIndex], m_oTitle.str().c_str(), true);
-    }
-
-	AddChannel(m_oGlobalClockChannel, "Global IC clock", true);
-
-	UpdateInterfacesFromSettings();
+  AddChannels();
+	
+  UpdateInterfacesFromSettings();
   }
 
 const char* LD110AnalyzerSettings::SaveSettings()
@@ -148,4 +115,20 @@ const char* LD110AnalyzerSettings::SaveSettings()
   m_oArchive << m_oGlobalClockChannel;
 
 	return SetReturnString( m_oArchive.GetString() );
+  }
+
+void LD110AnalyzerSettings::AddChannels()
+  {
+  for(int nIndex = 0; nIndex < m_nBCDAndDigitChannelCount; nIndex++)
+    {
+    m_oTitle.str("Digit ");
+    m_oTitle << nIndex + 1 << " clock";
+    AddChannel(m_oDigitChannelVector[nIndex], m_oTitle.str().c_str(), true);
+
+    m_oTitle.str("Digit ");
+    m_oTitle << nIndex + 1 << " clock";
+    AddChannel(m_oDigitChannelVector[nIndex], m_oTitle.str().c_str(), true);
+    }
+
+	AddChannel(m_oGlobalClockChannel, "Global IC clock", true);
   }
