@@ -18,11 +18,11 @@ class LD110AnalyzerSettings : public AnalyzerSettings
     void UpdateInterfacesFromSettings();
     virtual void LoadSettings( const char* settings );
     virtual const char* SaveSettings();
-    
+
     Channel* BCDChannelGet(int nIndex) { return &m_oBCDChannelVector[nIndex]; }
     Channel* DigitChannelGet(int nIndex) { return &m_oDigitChannelVector[nIndex]; }
     Channel* GlobalClockChannelGet() { return &m_oGlobalClockChannel; }
-    
+
     short BCDAndChannelCountGet() { return m_nBCDAndDigitChannelCount; }
 
   protected:
@@ -44,7 +44,7 @@ class LD110AnalyzerSettings : public AnalyzerSettings
     std::vector<std::unique_ptr<AnalyzerSettingInterfaceChannel>> m_oDigitChannelInterfaceVector{4};
 
     std::unique_ptr<AnalyzerSettingInterfaceChannel> m_oGlobalClockChannelInterface;
-    
+
 };
 
 #endif //LD110_ANALYZER_SETTINGS

@@ -41,7 +41,7 @@ public:
 
 public:  //adding/setting data
 	void AddMarker( U64 sample_number, MarkerType marker_type, Channel& channel );
-	
+
 	U64 AddFrame( Frame& frame );
 	U64 CommitPacketAndStartNewPacket();
 	void CancelPacketAndStartNewPacket();
@@ -62,7 +62,7 @@ public:  //data access
 	U32 GetTransactionContainingPacket( U64 packet_id );
 	void GetPacketsContainedInTransaction( U64 transaction_id, U64** packet_id_array, U64* packet_id_count );
 
-	
+
 
 public:  //text results setting and access:
 	void ClearResultStrings();

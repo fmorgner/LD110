@@ -100,7 +100,7 @@ public:
 
 	void SetMax( int max );
 	void SetMin( int min );
-	
+
 protected:
 	struct AnalyzerSettingInterfaceIntegerData* mIntegerData;
 
@@ -125,7 +125,7 @@ public:
 
 protected:
 	struct AnalyzerSettingInterfaceTextData* mTextData;
-	
+
 };
 
 

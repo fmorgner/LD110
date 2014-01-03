@@ -6,7 +6,7 @@ LD110AnalyzerSettings::LD110AnalyzerSettings() : m_oGlobalClockChannel(UNDEFINED
     {
     m_oBCDChannelInterfaceVector[nIndex].reset(new AnalyzerSettingInterfaceChannel());
     m_oBCDChannelVector.push_back(Channel(UNDEFINED_CHANNEL));
-    
+
     m_oDigitChannelInterfaceVector[nIndex].reset(new AnalyzerSettingInterfaceChannel());
     m_oDigitChannelVector.push_back(Channel(UNDEFINED_CHANNEL));
     }
@@ -17,10 +17,10 @@ LD110AnalyzerSettings::LD110AnalyzerSettings() : m_oGlobalClockChannel(UNDEFINED
     {
     m_oTitle.str("BCD Bit ");
     m_oTitle << (nIndex + 1);
-    
+
     m_oTooltip.str("BCD Bit ");
     m_oTooltip << nIndex + 1 << " (Pin " << 16 - nIndex << ")";
-    
+
     m_oBCDChannelInterfaceVector[nIndex]->SetTitleAndTooltip(m_oTitle.str().c_str(), m_oTooltip.str().c_str());
     m_oBCDChannelInterfaceVector[nIndex]->SetChannel(m_oBCDChannelVector[nIndex]);
 
@@ -31,16 +31,16 @@ LD110AnalyzerSettings::LD110AnalyzerSettings() : m_oGlobalClockChannel(UNDEFINED
     {
     m_oTitle.str("Digit ");
     m_oTitle << nIndex + 1 << " clock";
-    
+
     m_oTooltip.str("The clock for digit ");
     m_oTooltip << nIndex + 1 << " (Pin " << 1 + nIndex << ")";
-    
+
     m_oDigitChannelInterfaceVector[nIndex]->SetTitleAndTooltip(m_oTitle.str().c_str(), m_oTooltip.str().c_str());
     m_oDigitChannelInterfaceVector[nIndex]->SetChannel(m_oDigitChannelVector[nIndex]);
 
     AddInterface(m_oDigitChannelInterfaceVector[nIndex].get());
     }
-  
+
   m_oGlobalClockChannelInterface.reset(new AnalyzerSettingInterfaceChannel());
   m_oGlobalClockChannelInterface->SetTitleAndTooltip("Global clock", "The clock for LD110 IC");
   m_oGlobalClockChannelInterface->SetChannel(m_oGlobalClockChannel);
@@ -68,7 +68,7 @@ bool LD110AnalyzerSettings::SetSettingsFromInterfaces()
     }
 
   m_oGlobalClockChannel = m_oGlobalClockChannelInterface->GetChannel();
-  
+
 	ClearChannels();
   AddChannels();
 
@@ -100,7 +100,7 @@ void LD110AnalyzerSettings::LoadSettings( const char* settings )
 
 	ClearChannels();
   AddChannels();
-	
+
   UpdateInterfacesFromSettings();
   }
 

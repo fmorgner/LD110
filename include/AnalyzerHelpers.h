@@ -18,7 +18,7 @@ public:
 	static U64 AdjustSimulationTargetSample( U64 target_sample, U32 sample_rate, U32 simulation_sample_rate );
 
 	static bool DoChannelsOverlap( const Channel* channel_array, U32 num_channels );
-	static void SaveFile( const char* file_name, const U8* data, U32 data_length, bool is_binary = false ); 
+	static void SaveFile( const char* file_name, const U8* data, U32 data_length, bool is_binary = false );
 
 	static S64 ConvertToSignedNumber( U64 number, U32 num_bits );
 
@@ -67,7 +67,7 @@ class LOGICAPI DataBuilder
 public:
 	DataBuilder();
 	~DataBuilder();
-	
+
 	void Reset( U64* data, AnalyzerEnums::ShiftOrder shift_order, U32 num_bits );
 	void AddBit( BitState bit );
 
@@ -105,7 +105,7 @@ public:
 	bool operator>>( bool& data );
 	bool operator>>( char const ** data );
 	bool operator>>( Channel& data );
-	
+
 protected:
 	struct SimpleArchiveData* mData;
 };

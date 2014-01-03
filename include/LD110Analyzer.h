@@ -27,13 +27,13 @@ class ANALYZER_EXPORT LD110Analyzer : public Analyzer
   protected:
     std::unique_ptr<LD110AnalyzerSettings> m_oSettings{new LD110AnalyzerSettings()};
     std::unique_ptr<LD110AnalyzerResults>  m_oResults;
-    
+
     std::vector<AnalyzerChannelData*> m_oBCDChannelDataVector;
     std::vector<AnalyzerChannelData*> m_oDigitChannelDataVector;
-    
+
     AnalyzerChannelData* m_poGlobalClockChannelData;
     LD110SimulationDataGenerator m_oSimulationDataGenerator;
-    
+
     bool m_bSimulationIsInitialized = false;
     bool m_bIsFirstFrame = true;
 

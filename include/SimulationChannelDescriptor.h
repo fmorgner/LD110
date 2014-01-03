@@ -48,7 +48,7 @@ public:
 
 	void AdvanceAll( U32 num_samples_to_advance );
 
-public:  
+public:
 	SimulationChannelDescriptor* GetArray();
 	U32 GetCount();
 
